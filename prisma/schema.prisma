@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model configs {
+  id           Int         @id @default(autoincrement())
+  instance_id Int
+  config_name  String
+  config_data  Json
+  is_active    Boolean?    @default(true)
+  created_at   DateTime?   @default(now())
+  
+  instancias   instancias  @relation(fields: [instance_id], references: [id], onDelete: Cascade)
+  licenses     licenses[]
+}
+
+model instancias {
+  id           Int         @id @default(autoincrement())
+  client_name  String
+  instance_url String      @unique
+  is_active    Boolean?    @default(true)
+  created_at   DateTime?   @default(now())
+
+  configs      configs[]
+  licenses     licenses[]  @relation("licenses_instancias")
+}
+
+model licenses {
+  license_key          String      @id
+  config_id            Int
+  activated_machine_id String?
+  is_active            Boolean?    @default(true)
+  created_at           DateTime?   @default(now())
+  instance_id          Int?        
+
+  configs              configs     @relation(fields: [config_id], references: [id], onDelete: Cascade)
+  instancias           instancias? @relation("licenses_instancias", fields: [instance_id], references: [id], onDelete: Cascade)
+}
