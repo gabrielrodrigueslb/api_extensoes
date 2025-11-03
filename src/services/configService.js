@@ -40,4 +40,3 @@ export const createConfig = async (config_name, instance_url, config_data) => {
   };
 };
 
-export const 
