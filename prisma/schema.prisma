@@ -38,6 +38,6 @@ model licenses {
   created_at           DateTime?   @default(now())
   instance_id          Int?        
 
-  configs              configs     @relation(fields: [config_id], references: [id], onDelete: Cascade)
+  configs    configs   @relation(fields: [config_id], references: [id], onDelete: Cascade)
   instancias           instancias? @relation("licenses_instancias", fields: [instance_id], references: [id], onDelete: Cascade)
 }
