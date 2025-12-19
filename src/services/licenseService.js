@@ -5,23 +5,23 @@ export const activateLicense = async (licenseKey, machineId) => {
   const license = await prisma.licenses.findUnique({
     where: { license_key: licenseKey },
     include: {
-      config: {
+      configs: {
         include: { instancias: true }, // lembre que no schema atual é 'instancias'
       },
     },
   });
 
   if (!license) throw { status: 404, message: 'Chave de licença inválida.' };
-  if (!license.config.instancias || !license.config.instancias.is_active)
+  if (!license.configs.instancias || !license.configs.instancias.is_active)
     throw { status: 403, message: 'O acesso para esta empresa foi suspenso.' };
-  if (!license.config.is_active)
+  if (!license.configs.is_active)
     throw { status: 403, message: 'O acesso para esta loja foi suspenso.' };
   if (!license.is_active)
     throw { status: 403, message: 'Esta licença foi desativada.' };
 
-  const { dbName, clientToken } = license.config.config_data;
+  const { dbName, clientToken } = license.configs.config_data;
   const finalConfig = {
-    instanceUrl: license.config.instancias.instance_url,
+    instanceUrl: license.configs.instancias.instance_url,
     dbName,
     clientToken,
   };
@@ -31,7 +31,7 @@ export const activateLicense = async (licenseKey, machineId) => {
       where: { license_key: licenseKey },
       data: { activated_machine_id: machineId },
     });
-    return { success: true, config: finalConfig };
+    return { success: true, configs: finalConfig };
   }
 
   if (license.activated_machine_id === machineId)
@@ -80,3 +80,78 @@ export const createLicense = async (instance_url, config_id) => {
     message: 'Licença criada com sucesso!',
   };
 };
+
+export const deactivateLicense = async (licenseKey) => {
+  const license = await prisma.licenses.findUnique({
+    where: { license_key: licenseKey },
+  });
+  if (!license) throw { status: 404, message: 'Chave de licença inválida.' };
+
+  await prisma.licenses.update({
+    where: { license_key: licenseKey },
+    data: { is_active: false },
+  });
+  return {
+    success: true,
+    message: 'Licença desativada com sucesso.',
+  };
+}
+
+export const reactivateLicense = async (licenseKey) => {
+  const license = await prisma.licenses.findUnique({
+    where: { license_key: licenseKey },
+  });
+  if (!license) throw { status: 404, message: 'Chave de licença inválida.' }; 
+  await prisma.licenses.update({
+    where: { license_key: licenseKey },
+    data: { is_active: true },
+  });
+  return {
+    success: true,
+    message: 'Licença reativada com sucesso.',
+  };
+}
+
+export const getLicenseInfo = async (licenseKey) => {
+  const license = await prisma.licenses.findUnique({
+    where: { license_key: licenseKey },
+    include: {
+      configs: {
+        include: { instancias: true },
+      },
+    },
+  });
+  if (!license) throw { status: 404, message: 'Chave de licença inválida.' };
+  return {
+    success: true,
+    license: license,
+  };
+};
+
+export const listLicenses = async () => {
+  const licenses = await prisma.licenses.findMany({
+    include: {
+      configs: {
+        include: { instancias: true },
+      },  
+    },
+  });
+  return {
+    licenses: licenses,
+  };
+}
+
+export const deleteLicense = async (licenseKey) => {
+  const license = await prisma.licenses.findUnique({
+    where: { license_key: licenseKey },
+  });
+  if (!license) throw { status: 404, message: 'Chave de licença inválida.' };
+  await prisma.licenses.delete({
+    where: { license_key: licenseKey },
+  });
+  return {
+    success: true,
+    message: 'Licença deletada com sucesso.',
+  };
+}
+

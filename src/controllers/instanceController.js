@@ -21,3 +21,12 @@ export const postCreateInstance = async (req, res) => {
     });
   }
 };
+
+export const getListInstances = async (req, res) => {
+  try {
+    const result = await getAllInstances();
+    res.status(200).json(result);
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};

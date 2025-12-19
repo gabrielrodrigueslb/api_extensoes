@@ -26,3 +26,10 @@ export const createInstance = async (client_name, instance_Url) => {
     message: 'Instância criada com sucesso.',
   };
 };
+
+export const getAllInstances = async () => {
+  const instances = await prisma.instancias.findMany({
+    orderBy: { created_at: 'desc' }
+  });
+  return { success: true, instances };
+};

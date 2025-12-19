@@ -40,3 +40,12 @@ export const createConfig = async (config_name, instance_url, config_data) => {
   };
 };
 
+export const getAllConfigs = async () => {
+  const configs = await prisma.configs.findMany({
+    include: {
+      instancias: true
+    },
+    orderBy: { created_at: 'desc' }
+  });
+  return { success: true, configs };
+};
