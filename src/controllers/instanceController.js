@@ -1,4 +1,4 @@
-import { createInstance } from '../services/instanceService.js';
+import { createInstance, getAllInstances } from '../services/instanceService.js';
 
 export const postCreateInstance = async (req, res) => {
   const { client_name, instance_Url } = req.body;

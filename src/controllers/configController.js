@@ -1,4 +1,4 @@
-import { createConfig } from '../services/configService.js';
+import { createConfig, getAllConfigs } from '../services/configService.js';
 
 export const postCreateConfig = async (req, res) => {
   const { config_name, instance_url, config_data } = req.body;
