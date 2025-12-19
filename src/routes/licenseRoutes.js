@@ -7,6 +7,7 @@ import {
   getLicenseInfoByKey,
   getListLicenses,
   deleteLicenseByKey,
+  postUnbindLicense,
 } from '../controllers/licenseController.js';
 
 const router = express.Router();
@@ -34,5 +35,7 @@ router.get('/info/:key', getLicenseInfoByKey);
 // --- ROTA DELETE ---
 // Deleta uma licença permanentemente (pela URL)
 router.delete('/delete/:key', deleteLicenseByKey);
+// Desvinculao usuário da licensa
+router.post('/unbind', postUnbindLicense);
 
 export default router;

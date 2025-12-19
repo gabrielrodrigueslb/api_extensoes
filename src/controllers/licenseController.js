@@ -5,7 +5,8 @@ import {
   reactivateLicense,
   getLicenseInfo, // Adicionado
   listLicenses, // Adicionado
-  deleteLicense, // Adicionado
+  deleteLicense,
+  unbindLicenseMachine, // Adicionado
 } from '../services/licenseService.js';
 
 export const postActiveLicense = async (req, res) => {
@@ -144,6 +145,24 @@ export const deleteLicenseByKey = async (req, res) => {
 
   try {
     const result = await deleteLicense(key);
+    res.status(200).json(result);
+  } catch (err) {
+    console.error(err);
+    res.status(err.status || 500).json({
+      success: false,
+      message: err.message || 'Erro interno no servidor.',
+    });
+  }
+};
+
+export const postUnbindLicense = async (req, res) => {
+  const { license_key } = req.body;
+  
+  if (!license_key)
+    return res.status(400).json({ success: false, message: 'Chave de licença é obrigatória.' });
+
+  try {
+    const result = await unbindLicenseMachine(license_key);
     res.status(200).json(result);
   } catch (err) {
     console.error(err);

@@ -155,3 +155,20 @@ export const deleteLicense = async (licenseKey) => {
   };
 }
 
+export const unbindLicenseMachine = async (licenseKey) => {
+  const license = await prisma.licenses.findUnique({
+    where: { license_key: licenseKey },
+  });
+
+  if (!license) throw { status: 404, message: 'Licença não encontrada.' };
+
+  await prisma.licenses.update({
+    where: { license_key: licenseKey },
+    data: { activated_machine_id: null }, // Limpa o vínculo
+  });
+
+  return {
+    success: true,
+    message: 'Vínculo de máquina removido com sucesso.',
+  };
+};
