@@ -1,5 +1,5 @@
 import express from 'express';
-import { postCreateConfig } from '../controllers/configController.js';
+import { getListConfigs, postCreateConfig } from '../controllers/configController.js';
 
 const router = express.Router();
 

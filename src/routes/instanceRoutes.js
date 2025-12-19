@@ -1,5 +1,5 @@
 import express from 'express';
-import { postCreateInstance } from '../controllers/instanceController.js';
+import { getListInstances, postCreateInstance } from '../controllers/instanceController.js';
 
 const router = express.Router();
 
