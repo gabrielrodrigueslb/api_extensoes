@@ -1,9 +1,9 @@
 import { createInstance, getAllInstances } from '../services/instanceService.js';
 
 export const postCreateInstance = async (req, res) => {
-  const { client_name, instance_Url } = req.body;
+  const { client_name, instance_url } = req.body;
 
-  if (!client_name || !instance_Url)
+  if (!client_name || !instance_url)
     return res.status(400).json({
       success: false,
       message:
@@ -11,7 +11,7 @@ export const postCreateInstance = async (req, res) => {
     });
 
   try {
-    const result = await createInstance(client_name, instance_Url);
+    const result = await createInstance(client_name, instance_url);
     res.status(200).json(result);
   } catch (err) {
     console.error(err);
