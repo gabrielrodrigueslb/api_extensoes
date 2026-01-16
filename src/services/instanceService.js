@@ -2,7 +2,7 @@ import prisma from '../prismaClient.js';
 
 function normalizeUrl(url){
   try{
-    const parse = new URL(url);
+    const parsed = new URL(url);
 
     const hostname = parsed.hostname;
 
@@ -12,17 +12,17 @@ function normalizeUrl(url){
   }
 }
 
-export const createInstance = async (client_name, instance_Url) => {
+export const createInstance = async (client_name, instance_url) => {
   // Verifica se já existe
   const existingInstance = await prisma.instancias.findUnique({
-    where: { instance_url: instance_Url },
+    where: { instance_url: instance_url },
   });
 
   if (existingInstance) {
     throw { status: 409, message: 'Instância com esta URL já existe.' };
   }
 
-  const urlNormalized = normalizeUrl(instance_Url)
+  const urlNormalized = normalizeUrl(instance_url)
 
   // Cria nova instância
   const newInstance = await prisma.instancias.create({
