@@ -22,11 +22,13 @@ export const createInstance = async (client_name, instance_Url) => {
     throw { status: 409, message: 'Instância com esta URL já existe.' };
   }
 
+  const urlNormalized = normalizeUrl(instance_Url)
+
   // Cria nova instância
   const newInstance = await prisma.instancias.create({
     data: {
       client_name,
-      instance_url: normalizeUrl(instance_Url),
+      instance_url: urlNormalized,
       is_active: true,
     },
   });
