@@ -17,7 +17,8 @@ const allowedOrigins = [
 ];
 
 app.use(cors({
-  origin: function (origin, callback) {
+  origin:"*",
+ /*  origin: function (origin, callback) {
     // Permite requisições sem 'origin' (como Postman ou Apps Mobile)
     if (!origin) return callback(null, true);
     
@@ -26,10 +27,9 @@ app.use(cors({
       return callback(new Error(msg), false);
     }
     return callback(null, true);
-  },
+  }, */
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'x-api-key'],
-  credentials: true // Se precisar de cookies/sessão no futuro
 }));
 app.use(express.json());
 
