@@ -1,5 +1,17 @@
 import prisma from '../prismaClient.js';
 
+function normalizeUrl(url){
+  try{
+    const parse = new URL(url);
+
+    const hostname = parsed.hostname;
+
+    return `${parsed.protocol}//${hostname}/`;
+  }catch(err){
+    return null
+  }
+}
+
 export const createInstance = async (client_name, instance_Url) => {
   // Verifica se já existe
   const existingInstance = await prisma.instancias.findUnique({
@@ -14,7 +26,7 @@ export const createInstance = async (client_name, instance_Url) => {
   const newInstance = await prisma.instancias.create({
     data: {
       client_name,
-      instance_url: instance_Url,
+      instance_url: normalizeUrl(instance_Url),
       is_active: true,
     },
   });
